@@ -21,8 +21,7 @@ void setup ()
             buttons[i][j] = new MSButton(i,j);
         }
     }
-    //for (int b=0; b<(int)(Math.sqrt(NUM_ROWS*NUM_COLS))*2; b++)
-    setBombs();
+    for (int b=0; b<(int)(Math.sqrt(NUM_ROWS*NUM_COLS))*2; b++)
     setBombs();
 }
 public void setBombs()
