@@ -21,7 +21,8 @@ void setup ()
             buttons[i][j] = new MSButton(i,j);
         }
     }
-    for (int b=0; b<(int)(Math.sqrt(NUM_ROWS*NUM_COLS))*2; b++)
+    //for (int b=0; b<(int)(Math.sqrt(NUM_ROWS*NUM_COLS))*2; b++)
+    setBombs();
     setBombs();
 }
 public void setBombs()
@@ -38,21 +39,40 @@ public void setBombs()
 public void draw ()
 {
     background( 0 );
-    if(isWon())
+    if(isWon()) {
         displayWinningMessage();
+        noLoop();
+    }
 }
 public boolean isWon()
 {
-    
+    int win=0;
+    for (int i=0;i<NUM_ROWS;i++)
+        for (int j=0;j<NUM_COLS;j++)
+            if((buttons[i][j].isMarked()==true&&bombs.contains(buttons[i][j])==true) || buttons[i][j].isClicked()==true && !(buttons[i][j].isMarked()==true&&bombs.contains(buttons[i][j])==false))
+                win++; 
+    if (win==(NUM_ROWS*NUM_COLS)) {
+        return true;
+    }
+
     return false;
 }
 public void displayLosingMessage()
 {
-    
+    for (int i=0;i<NUM_ROWS;i++)
+        for (int j=0;j<NUM_COLS;j++)
+            if(bombs.contains(buttons[i][j])==true)
+                buttons[i][j].clicked=true;
+    String loseMessage="you lose";
+    for(int i=0; i<loseMessage.length();i++)
+        buttons[10][i+6].setLabel(loseMessage.substring(i,i+1));
+    noLoop();
 }
 public void displayWinningMessage()
 {
-    //your code here
+    String winMessage="you win";
+    for(int i=0; i<winMessage.length();i++)
+        buttons[10][i+6].setLabel(winMessage.substring(i,i+1));
 }
 
 public class MSButton
@@ -91,7 +111,7 @@ public class MSButton
             buttons[r][c].marked=true;
         } else if (keyPressed==true && buttons[r][c].isMarked()==true){
             buttons[r][c].marked=false;
-        } else if (bombs.contains(this)) {
+        } else if (bombs.contains(this)&&buttons[r][c].isMarked()==false) {
             displayLosingMessage();
         }
         if (countBombs(r,c)==0) {
@@ -110,8 +130,8 @@ public class MSButton
     {    
         if (marked)
             fill(0);
-         else if( clicked && bombs.contains(this) ) 
-             fill(255,0,0);
+         else if( clicked && bombs.contains(this) )
+            fill(255,0,0);
         else if(clicked)
             fill( 200 );
         else 
